@@ -1,73 +1,108 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Microservices Architecture with NestJS, RabbitMQ, and JWT Authentication
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project demonstrates a microservices architecture using NestJS, RabbitMQ, and JWT authentication. It consists of multiple microservices (Auth, Billing, Orders) interacting through RabbitMQ queues, allowing for scalable and decoupled communication.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of Contents
 
-## Description
+1. [Introduction](#introduction)
+2. [Architecture Overview](#architecture-overview)
+3. [Installation and Setup](#installation-and-setup)
+4. [Project Structure](#project-structure)
+5. [Configuration](#configuration)
+6. [Running the Application](#running-the-application)
+7. [Authentication and Authorization](#authentication-and-authorization)
+8. [Microservice Communication](#microservice-communication)
+9. [Usage Examples](#usage-examples)
+10. [Development and Debugging](#development-and-debugging)
+11. [Flow of Operations](#flow-of-operations)
+12. [Conclusion](#conclusion)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 1. Introduction
 
-## Installation
+This repository showcases the development and deployment of a microservices-based application using NestJS, RabbitMQ, and JWT authentication. The project emphasizes modularity, scalability, and secure communication between microservices.
 
-```bash
-$ npm install
-```
+## 2. Architecture Overview
 
-## Running the app
+- Three microservices (Auth, Billing, Orders)
+- RabbitMQ for asynchronous inter-service communication
+- Docker Compose for easy deployment and management
 
-```bash
-# development
-$ npm run start
+## 3. Installation and Setup
 
-# watch mode
-$ npm run start:dev
+1. Clone the repository: `git clone https://github.com/yourusername/your-repo.git`
+2. Install dependencies for each microservice: `npm install` (inside each microservice folder)
+3. Configure environment variables in `.env` files
 
-# production mode
-$ npm run start:prod
-```
+## 4. Project Structure
 
-## Test
+- `apps/auth`: Auth microservice
+- `apps/billing`: Billing microservice
+- `apps/orders`: Orders microservice
+- `libs/common`: Common modules
 
-```bash
-# unit tests
-$ npm run test
+## 5. Configuration
 
-# e2e tests
-$ npm run test:e2e
+- Microservice-specific `.env` files for configuration
+- `docker-compose.yml` for defining service orchestration
 
-# test coverage
-$ npm run test:cov
-```
+## 6. Running the Application
 
-## Support
+### Using Docker Compose
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+1. Open a terminal in the project directory.
+2. Execute `docker-compose up` to start all services.
 
-## Stay in touch
+### Starting Microservices
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+1. Navigate to each microservice directory.
+2. Run `npm run start:dev` to start the microservice in development mode.
 
-## License
+## 7. Authentication and Authorization
 
-Nest is [MIT licensed](LICENSE).
+- JWT tokens for user authentication
+- `JwtAuthGuard` to validate tokens and protect routes
+
+## 8. Microservice Communication
+
+- RabbitMQ integration for asynchronous communication
+- `RmqService` methods for sending and receiving messages
+
+## 9. Usage Examples
+
+### Creating an Order
+
+1. Access the `createOrder` endpoint (protected by `JwtAuthGuard`)
+2. JWT token extracted from cookies and passed to `OrdersService`
+
+### Billing Microservice Interaction
+
+- `OrdersService` interacts with `BILLING_SERVICE`
+- `order_created` event emitted to trigger billing operations
+
+## 10. Development and Debugging
+
+- Debug container logs using `docker-compose logs <service-name>`
+- Use the NestJS CLI to generate modules, services, and controllers
+
+## 11. Flow of Operations
+
+### Auth Microservice
+
+1. Set up database, users module, RabbitMQ, JWT authentication.
+2. Start Nest application, handle authentication and authorization.
+
+### Billing Microservice
+
+1. Create billing module with RabbitMQ integration.
+2. Connect to RabbitMQ, start Nest application, handle billing operations.
+
+### Orders Microservice
+
+1. Set up orders module, define DTO for order creation.
+2. Validate and handle order creation requests, emit `order_created` event to billing.
+
+## 12. Conclusion
+
+This project exemplifies a microservices architecture with NestJS, RabbitMQ, and JWT authentication. Developers can utilize this repository to understand, implement, and expand their own microservices-based applications.
+
+For additional assistance or inquiries, refer to the project's documentation or reach out to the development team.
